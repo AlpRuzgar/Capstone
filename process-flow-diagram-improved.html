@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Flow Diagram</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            display: inline-block;
+            width: 120px;
+            text-align: right;
+            margin-right: 10px;
+        }
+
+        .button-primary {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .button-secondary {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .dashboard {
+            display: flex;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+
+        .activities {
+            flex: 1;
+            border-right: 1px solid #ddd;
+            padding-right: 10px;
+        }
+
+        .metrics {
+            flex: 1;
+            padding-left: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        thead {
+            background-color: #f9e79f;
+        }
+
+        .symbol-cell {
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .symbol-selected {
+            background-color: #3498db;
+        }
+
+        .operation-symbol {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: 2px solid black;
+        }
+
+        .transport-symbol {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            position: relative;
+        }
+
+        .transport-symbol::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 25px;
+            height: 2px;
+            background-color: black;
+            transform: translateY(-50%);
+        }
+
+        .transport-symbol::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            border: solid black;
+            border-width: 0 2px 2px 0;
+            display: inline-block;
+            padding: 3px;
+            transform: translateY(-50%) rotate(-45deg);
+        }
+
+        .delay-symbol {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            border: 2px solid black;
+            border-radius: 25px 25px 0 0;
+            border-bottom: none;
+        }
+
+        .inspection-symbol {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            border: 2px solid black;
+        }
+
+        .store-symbol {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 25px solid black;
+        }
+
+        .action-button {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .add-row {
+            display: block;
+            margin: 20px auto;
+            padding: 8px 15px;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <button class="button-primary" id="getPdf">Get Results In PDF</button>
+        <button class="button-primary" id="saveDiagram">💾 Save Diagram</button>
+        <div>
+            <button class="button-secondary" id="undo">Undo</button>
+            <button class="button-secondary" id="redo">Redo</button>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="activity">Activity:</label>
+        <input type="text" id="activity">
+    </div>
+    <div class="form-group">
+        <label for="studentName">Student Name:</label>
+        <input type="text" id="studentName">
+    </div>
+    <div class="form-group">
+        <label for="date">Date:</label>
+        <input type="text" id="date" placeholder="MM / DD / YYYY">
+    </div>
+
+    <div class="dashboard">
+        <div class="activities">
+            <h3>Activities and their frequency</h3>
+            <div class="form-group">
+                <label>Operation</label>
+                <span class="operation-symbol"></span>
+                <span id="operationCount">2</span>
+            </div>
+            <div class="form-group">
+                <label>Transport</label>
+                <span class="transport-symbol"></span>
+                <span id="transportCount">2</span>
+            </div>
+            <div class="form-group">
+                <label>Delay</label>
+                <span class="delay-symbol"></span>
+                <span id="delayCount">1</span>
+            </div>
+            <div class="form-group">
+                <label>Inspection</label>
+                <span class="inspection-symbol"></span>
+                <span id="inspectionCount">1</span>
+            </div>
+            <div class="form-group">
+                <label>Store</label>
+                <span class="store-symbol"></span>
+                <span id="storeCount">1</span>
+            </div>
+        </div>
+        <div class="metrics">
+            <h3>Process Performance Metrics</h3>
+            <div class="form-group">
+                <label>Total Distance</label>
+                <span id="totalDistance">70</span>
+            </div>
+            <div class="form-group">
+                <label>Total Time</label>
+                <span id="totalTime">42</span>
+            </div>
+            <div class="form-group">
+                <label>Total Value Added Time</label>
+                <span id="totalValueAddedTime">30</span>
+            </div>
+            <div class="form-group">
+                <label>Total Non-Value Added Time</label>
+                <span id="totalNonValueAddedTime">12</span>
+            </div>
+            <div class="form-group">
+                <label>% of Value Added Process</label>
+                <span id="valueAddedPercentage">71.43%</span>
+            </div>
+            <div class="form-group">
+                <label>% of Non-Value Added Process</label>
+                <span id="nonValueAddedPercentage">28.57%</span>
+            </div>
+            <button class="button-primary" id="update">Update</button>
+        </div>
+    </div>
+
+    <div>
+        <button class="button-secondary" id="reset">Reset</button>
+    </div>
+
+    <table id="processTable">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Description</th>
+                <th>Distance (m)</th>
+                <th>Time (min)</th>
+                <th>Operation</th>
+                <th>Transport</th>
+                <th>Delay</th>
+                <th>Inspection</th>
+                <th>Store</th>
+                <th>Notes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="processTableBody">
+            <tr>
+                <td>1</td>
+                <td><input type="text" class="description-input" value=""></td>
+                <td><input type="number" class="distance-input" value="0"></td>
+                <td><input type="number" class="time-input" value="0"></td>
+                <td class="symbol-cell operation" data-symbol="operation">
+                    <div class="operation-symbol"></div>
+                </td>
+                <td class="symbol-cell transport" data-symbol="transport">
+                    <div class="transport-symbol"></div>
+                </td>
+                <td class="symbol-cell delay" data-symbol="delay">
+                    <div class="delay-symbol"></div>
+                </td>
+                <td class="symbol-cell inspection" data-symbol="inspection">
+                    <div class="inspection-symbol"></div>
+                </td>
+                <td class="symbol-cell store" data-symbol="store">
+                    <div class="store-symbol"></div>
+                </td>
+                <td><input type="text" class="notes-input"></td>
+                <td>
+                    <button class="action-button delete-row">⊖</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button class="add-row" id="addRow">⊕ Add New Process Layer</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initial row count
+            let rowCount = 1;
+
+            // Setup undo/redo functionality
+            const stateHistory = [];
+            let currentStateIndex = -1;
+
+            // Function to get current state
+            function getCurrentState() {
+                const rows = document.querySelectorAll('#processTableBody tr');
+                const state = {
+                    activity: document.getElementById('activity').value,
+                    studentName: document.getElementById('studentName').value,
+                    date: document.getElementById('date').value,
+                    rows: []
+                };
+
+                rows.forEach(row => {
+                    const rowData = {
+                        description: row.querySelector('.description-input').value,
+                        distance: row.querySelector('.distance-input').value,
+                        time: row.querySelector('.time-input').value,
+                        notes: row.querySelector('.notes-input').value,
+                        selectedSymbol: ''
+                    };
+
+                    const symbols = ['operation', 'transport', 'delay', 'inspection', 'store'];
+                    symbols.forEach(symbol => {
+                        if (row.querySelector(`.${symbol}`)?.classList.contains('symbol-selected')) {
+                            rowData.selectedSymbol = symbol;
+                        }
+                    });
+
+                    state.rows.push(rowData);
+                });
+
+                return state;
+            }
+
+            // Function to restore state
+            function restoreState(state) {
+                document.getElementById('activity').value = state.activity;
+                document.getElementById('studentName').value = state.studentName;
+                document.getElementById('date').value = state.date;
+
+                const tbody = document.getElementById('processTableBody');
+                tbody.innerHTML = '';
+
+                state.rows.forEach((rowData, index) => {
+                    const newRow = document.createElement('tr');
+                    newRow.innerHTML = `
+            <td>${index + 1}</td>
+            <td><input type="text" class="description-input" value="${rowData.description}"></td>
+            <td><input type="number" class="distance-input" value="${rowData.distance}"></td>
+            <td><input type="number" class="time-input" value="${rowData.time}"></td>
+            <td class="symbol-cell operation" data-symbol="operation"><div class="operation-symbol"></div></td>
+            <td class="symbol-cell transport" data-symbol="transport"><div class="transport-symbol"></div></td>
+            <td class="symbol-cell delay" data-symbol="delay"><div class="delay-symbol"></div></td>
+            <td class="symbol-cell inspection" data-symbol="inspection"><div class="inspection-symbol"></div></td>
+            <td class="symbol-cell store" data-symbol="store"><div class="store-symbol"></div></td>
+            <td><input type="text" class="notes-input" value="${rowData.notes}"></td>
+            <td><button class="action-button delete-row">⊖</button></td>
+            `;
+
+                    tbody.appendChild(newRow);
+                    addRowListeners(newRow);
+
+                    if (rowData.selectedSymbol) {
+                        newRow.querySelector(`.${rowData.selectedSymbol}`)?.classList.add('symbol-selected');
+                    }
+                });
+
+                updateRowNumbers?.();
+                updateCounts?.();
+                updateMetrics?.();
+            }
+
+            function getDiagramFromStorage(key) {
+                const saved = localStorage.getItem(key);
+                return saved ? JSON.parse(saved) : null;
+            }
+
+            function loadFromStorageIfRequested() {
+                const params = new URLSearchParams(window.location.search);
+                const diagramKey = params.get('diagram');
+                if (diagramKey) {
+                    const savedData = getDiagramFromStorage(diagramKey);
+                    if (savedData) {
+                        restoreState(savedData);
+                    } else {
+                        alert('Diagram not found.');
+                    }
+                }
+            }
+
+            // Function to save state
+            function saveState() {
+                // Remove future states if we're in the middle of the history
+                if (currentStateIndex < stateHistory.length - 1) {
+                    stateHistory.splice(currentStateIndex + 1);
+                }
+
+                const state = getCurrentState();
+                stateHistory.push(state);
+                currentStateIndex = stateHistory.length - 1;
+
+                // Enable/disable undo/redo buttons
+                document.getElementById('undo').disabled = currentStateIndex <= 0;
+                document.getElementById('redo').disabled = currentStateIndex >= stateHistory.length - 1;
+            }
+
+            // Save initial state
+            saveState();
+
+            // Undo button
+            document.getElementById('undo').addEventListener('click', function () {
+                if (currentStateIndex > 0) {
+                    currentStateIndex--;
+                    restoreState(stateHistory[currentStateIndex]);
+                    document.getElementById('undo').disabled = currentStateIndex <= 0;
+                    document.getElementById('redo').disabled = false;
+                }
+            });
+
+            // Redo button
+            document.getElementById('redo').addEventListener('click', function () {
+                if (currentStateIndex < stateHistory.length - 1) {
+                    currentStateIndex++;
+                    restoreState(stateHistory[currentStateIndex]);
+                    document.getElementById('redo').disabled = currentStateIndex >= stateHistory.length - 1;
+                    document.getElementById('undo').disabled = false;
+                }
+            });
+
+            // Date formatting
+            document.getElementById('date').addEventListener('input', function (e) {
+                let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+
+                if (value.length > 0) {
+                    // Format as MM/DD/YYYY
+                    if (value.length <= 2) {
+                        e.target.value = value;
+                    } else if (value.length <= 4) {
+                        e.target.value = value.slice(0, 2) + ' / ' + value.slice(2);
+                    } else {
+                        e.target.value = value.slice(0, 2) + ' / ' + value.slice(2, 4) + ' / ' + value.slice(4, 8);
+                    }
+                }
+            });
+
+            // Add row event listener
+            document.getElementById('addRow').addEventListener('click', function () {
+                rowCount++;
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td>${rowCount}</td>
+                    <td><input type="text" class="description-input"></td>
+                    <td><input type="number" class="distance-input" value="0"></td>
+                    <td><input type="number" class="time-input" value="0"></td>
+                    <td class="symbol-cell operation" data-symbol="operation"><div class="operation-symbol"></div></td>
+                    <td class="symbol-cell transport" data-symbol="transport"><div class="transport-symbol"></div></td>
+                    <td class="symbol-cell delay" data-symbol="delay"><div class="delay-symbol"></div></td>
+                    <td class="symbol-cell inspection" data-symbol="inspection"><div class="inspection-symbol"></div></td>
+                    <td class="symbol-cell store" data-symbol="store"><div class="store-symbol"></div></td>
+                    <td><input type="text" class="notes-input"></td>
+                    <td>
+                        <button class="action-button delete-row">⊖</button>
+                    </td>
+                `;
+                document.getElementById('processTableBody').appendChild(newRow);
+
+                // Add event listeners to the new row
+                addRowListeners(newRow);
+
+                // Save state after adding row
+                saveState();
+            });
+
+            // Function to add event listeners to a row
+            function addRowListeners(row) {
+                // Input change events
+                const inputs = row.querySelectorAll('input');
+                inputs.forEach(input => {
+                    input.addEventListener('change', function () {
+                        saveState();
+                    });
+                });
+
+                // Delete row functionality
+                row.querySelector('.delete-row').addEventListener('click', function () {
+                    if (document.querySelectorAll('#processTableBody tr').length > 1) {
+                        row.remove();
+                        updateRowNumbers();
+                        updateCounts();
+                        saveState();
+                    }
+                });
+
+                // Symbol selection functionality
+                const symbolCells = row.querySelectorAll('.symbol-cell');
+                symbolCells.forEach(cell => {
+                    cell.addEventListener('click', function () {
+                        // Remove selection from all symbols in this row
+                        symbolCells.forEach(c => c.classList.remove('symbol-selected'));
+
+                        // Add selection to clicked symbol
+                        this.classList.add('symbol-selected');
+
+                        // Update counts
+                        updateCounts();
+
+                        // Save state after selecting symbol
+                        saveState();
+                    });
+                });
+            }
+
+            // Function to update row numbers
+            function updateRowNumbers() {
+                const rows = document.querySelectorAll('#processTableBody tr');
+                rows.forEach((row, index) => {
+                    row.cells[0].textContent = index + 1;
+                });
+                rowCount = rows.length;
+            }
+
+            // Function to update activity counts
+            function updateCounts() {
+                const operationCount = document.querySelectorAll('.operation.symbol-selected').length;
+                const transportCount = document.querySelectorAll('.transport.symbol-selected').length;
+                const delayCount = document.querySelectorAll('.delay.symbol-selected').length;
+                const inspectionCount = document.querySelectorAll('.inspection.symbol-selected').length;
+                const storeCount = document.querySelectorAll('.store.symbol-selected').length;
+
+                document.getElementById('operationCount').textContent = operationCount;
+                document.getElementById('transportCount').textContent = transportCount;
+                document.getElementById('delayCount').textContent = delayCount;
+                document.getElementById('inspectionCount').textContent = inspectionCount;
+                document.getElementById('storeCount').textContent = storeCount;
+            }
+
+            // Function to update metrics
+            function updateMetrics() {
+                let totalDistance = 0;
+                let totalTime = 0;
+                let valueAddedTime = 0;
+                let nonValueAddedTime = 0;
+
+                const rows = document.querySelectorAll('#processTableBody tr');
+                rows.forEach(row => {
+                    const distance = parseFloat(row.querySelector('.distance-input').value) || 0;
+                    const time = parseFloat(row.querySelector('.time-input').value) || 0;
+
+                    totalDistance += distance;
+                    totalTime += time;
+
+                    // Assume operations and inspections add value, others don't
+                    if (row.querySelector('.operation.symbol-selected') ||
+                        row.querySelector('.inspection.symbol-selected')) {
+                        valueAddedTime += time;
+                    } else {
+                        nonValueAddedTime += time;
+                    }
+                });
+
+                const valueAddedPercentage = totalTime > 0 ? (valueAddedTime / totalTime * 100).toFixed(2) : 0;
+                const nonValueAddedPercentage = totalTime > 0 ? (nonValueAddedTime / totalTime * 100).toFixed(2) : 0;
+
+                document.getElementById('totalDistance').textContent = totalDistance;
+                document.getElementById('totalTime').textContent = totalTime;
+                document.getElementById('totalValueAddedTime').textContent = valueAddedTime;
+                document.getElementById('totalNonValueAddedTime').textContent = nonValueAddedTime;
+                document.getElementById('valueAddedPercentage').textContent = valueAddedPercentage + '%';
+                document.getElementById('nonValueAddedPercentage').textContent = nonValueAddedPercentage + '%';
+            }
+
+            // Update metrics button
+            document.getElementById('update').addEventListener('click', function () {
+                updateMetrics();
+                saveState();
+            });
+
+            // Reset functionality
+            document.getElementById('reset').addEventListener('click', function () {
+                if (confirm('Are you sure you want to reset all data?')) {
+                    // Clear the table except for first row
+                    const tbody = document.getElementById('processTableBody');
+                    while (tbody.children.length > 1) {
+                        tbody.removeChild(tbody.lastChild);
+                    }
+
+                    // Reset first row inputs
+                    const firstRow = tbody.firstChild;
+                    firstRow.querySelector('.description-input').value = '';
+                    firstRow.querySelector('.distance-input').value = '0';
+                    firstRow.querySelector('.time-input').value = '0';
+                    firstRow.querySelector('.notes-input').value = '';
+
+                    // Remove all symbol selections
+                    document.querySelectorAll('.symbol-cell').forEach(cell => {
+                        cell.classList.remove('symbol-selected');
+                    });
+
+                    // Reset counts and metrics
+                    document.getElementById('operationCount').textContent = '0';
+                    document.getElementById('transportCount').textContent = '0';
+                    document.getElementById('delayCount').textContent = '0';
+                    document.getElementById('inspectionCount').textContent = '0';
+                    document.getElementById('storeCount').textContent = '0';
+
+                    document.getElementById('totalDistance').textContent = '0';
+                    document.getElementById('totalTime').textContent = '0';
+                    document.getElementById('totalValueAddedTime').textContent = '0';
+                    document.getElementById('totalNonValueAddedTime').textContent = '0';
+                    document.getElementById('valueAddedPercentage').textContent = '0%';
+                    document.getElementById('nonValueAddedPercentage').textContent = '0%';
+
+                    // Reset form fields
+                    document.getElementById('activity').value = '';
+                    document.getElementById('studentName').value = '';
+                    document.getElementById('date').value = '';
+
+                    rowCount = 1;
+
+                    // Save reset state
+                    saveState();
+                }
+            });
+
+            // PDF button (just a placeholder)
+            document.getElementById('getPdf').addEventListener('click', function () {
+                alert('PDF generation would happen here in a real implementation.');
+            });
+
+            // Add event listeners to initial rows
+            document.querySelectorAll('#processTableBody tr').forEach(row => {
+                addRowListeners(row);
+            });
+
+            // Set initial selection for first row (Operation)
+            document.querySelector('#processTableBody tr:first-child .operation').classList.add('symbol-selected');
+            updateCounts();
+
+            loadFromStorageIfRequested();
+
+            document.getElementById('saveDiagram').addEventListener('click', function () {
+                const title = prompt('Enter a name for your diagram:');
+                if (title) {
+                    const state = getCurrentState();
+                    state.title = title;
+                    const key = 'diagram_' + Date.now();
+                    localStorage.setItem(key, JSON.stringify(state));
+                    alert('Diagram saved!');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
