@@ -1,0 +1,299 @@
+
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+#date{
+    border-bottom: 1px solid black;
+    padding: 10px;
+    color: #333;
+    cursor: pointer;
+    width: 22.8%;
+    
+}
+
+.form-group input {
+    outline: none;
+    border: none;
+    margin-bottom: 10px;
+    margin-top: 20px;
+    border-bottom: 1px solid black;
+
+}
+
+.form-group2 {
+    margin-bottom: 5px;
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.form-group label {
+    display: inline-block;
+    width: 120px;
+    text-align: right;
+    margin-right: 10px;
+}
+
+.button-primary {
+    background-color: white;
+    opacity: 100%;
+    color: green;
+    border: none;
+    padding: 8px 15px;
+    margin: 15px 15px 15px;
+    cursor: pointer;
+    font-size: large;
+}
+
+.button-primary:hover{
+    background-color: green;
+    color: white;
+    border-radius: 10px;
+    transition: 10ms;
+}
+
+.button-secondary {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.button-secondary:hover{
+    color: green;
+}
+
+.body-container {
+    display: flex;
+    width: 100%;
+    
+}
+
+.body-container h3 {
+    font-size: 16px;
+    text-align: center;
+    left: 50%;
+    margin: 20px auto;
+}
+
+.body-container1 {
+    width: 36%;
+    border: 2px black;
+}
+
+.body-container2 {
+    width: 14%;
+    border: 1px solid black;
+    padding: 5px;
+
+}
+
+.body-container3 {
+    width: 50%;
+    border: 1px solid black;
+}
+
+.dashboard {
+    display: flex;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+.activities {
+    flex: 1;
+    padding-right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.metrics {
+    flex: 1;
+    padding-left: 10px;
+}
+
+.met2 {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-group3{
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 20px;
+    
+}
+
+.clms{
+    display: flex;
+    gap: 40px; 
+    width: 100%;
+}
+
+.clm1 {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 2;
+}
+
+.clm2 {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 2;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    
+}
+
+th,td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+table, tr, td, th {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+tr td input{
+    border: none;
+    outline: none;
+    width: 100%;
+    text-align: center;       
+}
+
+tr td input:focus{
+border-bottom: none;
+}
+
+thead {
+    background-color: #f9e79f;
+}
+
+
+.symbol-cell {
+    text-align: center;
+    cursor: pointer;
+}
+
+.symbol-selected.operation {
+    background-color: #3498db;
+}
+
+.symbol-selected.transport{
+    background-color: orange;
+}
+
+.symbol-selected.delay{
+    background-color: yellow;
+}
+
+.symbol-selected.inspection{
+    background-color: pink;
+}
+
+.symbol-selected.store{
+    background-color: cadetblue;
+}
+
+.operation-symbol {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    border: 2px solid black;
+}
+
+.transport-symbol {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    position: relative;
+}
+
+.transport-symbol::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 25px;
+    height: 2px;
+    background-color: black;
+    transform: translateY(-50%);
+}
+
+.transport-symbol::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    border: solid black;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: translateY(-50%) rotate(-45deg);
+}
+
+.delay-symbol {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    border: 2px solid black;
+    border-radius: 0 25px 25px 0;
+}
+
+.inspection-symbol {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    border: 2px solid black;
+}
+
+.store-symbol {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 25px solid black;
+}
+
+.action-button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color : red;
+    cursor: pointer;
+}
+
+.add-row {
+    display: block;
+    margin: 20px auto;
+    padding: 8px 15px;
+    background-color: #f1f1f1;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+}
