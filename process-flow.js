@@ -397,11 +397,20 @@ loadFromStorageIfRequested();
 document.getElementById('saveDiagram').addEventListener('click', function () {
     const title = prompt('Enter a name for your diagram:');
     if (title) {
+        const currentUser = JSON.parse(localStorage.getItem('loggedInUser'));
+        if (!currentUser) {
+            alert("Lütfen önce giriş yapın.");
+            window.location.href = "login.html";
+            return;
+        }
+
         const state = getCurrentState();
         state.title = title;
+        state.owner = currentUser.username; // kullanıcı kimliği
         const key = 'diagram_' + Date.now();
         localStorage.setItem(key, JSON.stringify(state));
         alert('Diagram saved!');
     }
 });
+
 });

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login / Sign Up</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+      display: flex;
+      gap: 60px;
+      padding: 60px 80px;
+      transform: scale(1.1);
+    }
+
+    .form-box {
+      width: 280px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #222;
+      font-size: 24px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 15px;
+      color: #555;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 18px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #message {
+      position: absolute;
+      bottom: 30px;
+      text-align: center;
+      font-size: 15px;
+    }
+
+    @media (max-width: 700px) {
+      .container {
+        flex-direction: column;
+        padding: 40px;
+        gap: 40px;
+        transform: none;
+      }
+
+      .form-box {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="form-box">
+      <h2>Giriş Yap</h2>
+      <form id="loginForm">
+        <label for="loginUsername">Kullanıcı Adı</label>
+        <input type="text" id="loginUsername" required>
+
+        <label for="loginPassword">Şifre</label>
+        <input type="password" id="loginPassword" required>
+
+        <button type="submit">Giriş Yap</button>
+      </form>
+    </div>
+
+    <div class="form-box">
+      <h2>Kayıt Ol</h2>
+      <form id="signupForm">
+        <label for="signupUsername">Kullanıcı Adı</label>
+        <input type="text" id="signupUsername" required>
+
+        <label for="signupPassword">Şifre</label>
+        <input type="password" id="signupPassword" required>
+
+        <button type="submit">Kayıt Ol</button>
+      </form>
+    </div>
+  </div>
+
+  <p id="message"></p>
+
+  <script>
+    const savedUsers = JSON.parse(localStorage.getItem('users')) || [];
+
+    document.getElementById("loginForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const username = document.getElementById("loginUsername").value.trim();
+      const password = document.getElementById("loginPassword").value;
+
+      const found = savedUsers.find(u => u.username === username && u.password === password);
+
+      if (found) {
+        localStorage.setItem("loggedInUser", JSON.stringify(found));
+        window.location.href = "my-diagrams.html";
+      } else {
+        showMessage("Hatalı kullanıcı adı veya şifre!", "red");
+      }
+    });
+
+    document.getElementById("signupForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const username = document.getElementById("signupUsername").value.trim();
+      const password = document.getElementById("signupPassword").value;
+
+      const exists = savedUsers.some(u => u.username === username);
+      if (exists) {
+        showMessage("Bu kullanıcı adı zaten kayıtlı.", "red");
+        return;
+      }
+
+      const newUser = { username, password };
+      savedUsers.push(newUser);
+      localStorage.setItem('users', JSON.stringify(savedUsers));
+      showMessage("Kayıt başarılı! Giriş yapabilirsiniz.", "green");
+
+      document.getElementById("signupForm").reset();
+    });
+
+    function showMessage(text, color) {
+      const message = document.getElementById("message");
+      message.textContent = text;
+      message.style.color = color;
+    }
+  </script>
+</body>
+</html>
