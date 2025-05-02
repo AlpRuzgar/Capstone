@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <td class="symbol-cell inspection" data-symbol="inspection"><div class="inspection-symbol"></div></td>
                 <td class="symbol-cell store" data-symbol="store"><div class="store-symbol"></div></td>
                 <td><input type="text" class="notes-input" value="${rowData.notes}" placeholder="Notes"></td>
-                <td><button class="action-button delete-row">⊖</button></td>
+                <td class ="no-print"><button class="action-button delete-row">⊖</button></td>
             `;
 
             tbody.appendChild(newRow);
@@ -135,6 +135,19 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    //logout button
+    document.getElementById('logout').addEventListener('click', function () {
+        if (confirm("Are you sure you want to exit ?")) {
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "login.html";
+        }
+    });
+
+    //back button
+    document.getElementById('back').addEventListener('click', function () {
+        window.location.href = "my-diagrams.html";
+    });
+
     /* Date formatting
     document.getElementById('date').addEventListener('input', function (e) {
         let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
@@ -166,9 +179,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <td class="symbol-cell inspection" data-symbol="inspection"><div class="inspection-symbol"></div></td>
             <td class="symbol-cell store" data-symbol="store"><div class="store-symbol"></div></td>
             <td><input type="text" class="notes-input" placeholder="Notes"></td>
-            <td>
-                <button class="action-button delete-row">⊖</button>
-            </td>
+            <td class ="no-print"><button class="action-button delete-row">⊖</button></td>
         `;
         document.getElementById('processTableBody').appendChild(newRow);
 
@@ -307,7 +318,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <td class="symbol-cell inspection" data-symbol="inspection"><div class="inspection-symbol"></div></td>
             <td class="symbol-cell store" data-symbol="store"><div class="store-symbol"></div></td>
             <td><input type="text" class="notes-input" placeholder="Notes"></td>
-            <td><button class="action-button delete-row">⊖</button></td>
+            <td class ="no-print"><button class="action-button delete-row">⊖</button></td>
             `;
             tbody.appendChild(newRow);
             addRowListeners(newRow);
@@ -344,11 +355,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-    // PDF button (just a placeholder)
-    document.getElementById('getPdf').addEventListener('click', function () {
-        const element = document.querySelector("body"); // PDF yapmak istediğin alanın id’si
+    // PDF Alma button 
+    document.getElementById('getPdf').addEventListener('click', pdfAlma);
+    document.getElementById('getPdff').addEventListener('click', pdfAlma);
+    function pdfAlma() {
+        const istek1 = document.getElementById("activity").value.trim();
+        const istek2 = document.getElementById("studentName").value.trim();
+        const istek3 = document.getElementById("date").value.trim();
+        if (istek1 === "" || istek2 === "" || istek3 === "") {
+            alert("Lütfen Activiy & StudentName & Date Alanlarını Doldurunuz")
+            return;
+        }
 
-        // Tüm .no-print elemanlarını geçici olarak gizle
+        const element = document.getElementById("pdfbody"); // PDF yapmak istediğin alanın id’si
+
         const hiddenElements = document.querySelectorAll('.no-print');
         hiddenElements.forEach(el => el.style.display = 'none');
 
@@ -365,52 +385,62 @@ document.addEventListener('DOMContentLoaded', function () {
                     filename: 'process-flow.pdf',
                     image: { type: 'jpeg', quality: 1 },
                     html2canvas: {
-                    transform: 5,
-                    scale: 3,           // çözünürlüğü artırır, kalite artar ama dosya büyür
-                    useCORS: true
-                },
+                        transform: 5,
+                        scale: 3,           // çözünürlüğü artırır, kalite artar ama dosya büyür
+                        useCORS: true
+                    },
                     jsPDF: {
                         unit: 'in',
                         format: 'a4',
                         orientation: 'landscape'
                     }
+                };
+
+
+                html2pdf().set(opt).from(element).save();
+                document.getElementById('pdfPreviewModal').style.display = 'none';
             };
+        });
+    };
 
-
-            html2pdf().set(opt).from(element).save();
-            document.getElementById('pdfPreviewModal').style.display = 'none';
-        };
-    });
-});
-
-// Add event listeners to initial rows
-document.querySelectorAll('#processTableBody tr').forEach(row => {
-    addRowListeners(row);
-});
-
-// Set initial selection for first row (Operation)
-document.querySelector('#processTableBody tr:first-child .operation').classList.add('symbol-selected');
-updateCounts();
-
-loadFromStorageIfRequested();
-
-document.getElementById('saveDiagram').addEventListener('click', function () {
-    const title = prompt('Enter a name for your diagram:');
-    if (title) {
-        const currentUser = JSON.parse(localStorage.getItem('loggedInUser'));
-        if (!currentUser) {
-            alert("Lütfen önce giriş yapın.");
-            window.location.href = "login.html";
-            return;
-        }
-
-        const state = getCurrentState();
-        state.title = title;
-        state.owner = currentUser.username; // kullanıcı kimliği
-        const key = 'diagram_' + Date.now();
-        localStorage.setItem(key, JSON.stringify(state));
-        alert('Diagram saved!');
+    window.closePreview = function() {
+        document.getElementById('pdfPreviewModal').style.display = 'none';
+    
+        // 👇 BURASI: Kapattığında tekrar geri getiriyorsun
+        const hiddenElements = document.querySelectorAll('.no-print');
+        hiddenElements.forEach(el => el.style.display = '');
     }
-});
+    
+    
+
+    // Add event listeners to initial rows
+    document.querySelectorAll('#processTableBody tr').forEach(row => {
+        addRowListeners(row);
+    });
+
+    // Set initial selection for first row (Operation)
+    document.querySelector('#processTableBody tr:first-child .operation').classList.add('symbol-selected');
+    updateCounts();
+
+    loadFromStorageIfRequested();
+
+    document.getElementById('saveDiagram').addEventListener('click', function () {
+        const title = prompt('Enter a name for your diagram:');
+        if (title) {
+            const currentUser = JSON.parse(localStorage.getItem('loggedInUser'));
+            if (!currentUser) {
+                alert("Lütfen önce giriş yapın.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            const state = getCurrentState();
+            state.title = title;
+            state.owner = currentUser.username; // kullanıcı kimliği
+            const key = 'diagram_' + Date.now();
+            localStorage.setItem(key, JSON.stringify(state));
+            alert('Diagram saved!');
+        }
+    });
 
 });

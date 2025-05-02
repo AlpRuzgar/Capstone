@@ -92,28 +92,28 @@
 <body>
   <div class="container">
     <div class="form-box">
-      <h2>Giriş Yap</h2>
+      <h2>Log In</h2>
       <form id="loginForm">
-        <label for="loginUsername">Kullanıcı Adı</label>
+        <label for="loginUsername">User Name</label>
         <input type="text" id="loginUsername" required>
 
-        <label for="loginPassword">Şifre</label>
+        <label for="loginPassword">Password</label>
         <input type="password" id="loginPassword" required>
 
-        <button type="submit">Giriş Yap</button>
+        <button type="submit">Log In</button>
       </form>
     </div>
 
     <div class="form-box">
-      <h2>Kayıt Ol</h2>
+      <h2>Sing Up</h2>
       <form id="signupForm">
-        <label for="signupUsername">Kullanıcı Adı</label>
+        <label for="signupUsername">User Name</label>
         <input type="text" id="signupUsername" required>
 
-        <label for="signupPassword">Şifre</label>
+        <label for="signupPassword">Password</label>
         <input type="password" id="signupPassword" required>
 
-        <button type="submit">Kayıt Ol</button>
+        <button type="submit">Sing Up</button>
       </form>
     </div>
   </div>
@@ -134,7 +134,7 @@
         localStorage.setItem("loggedInUser", JSON.stringify(found));
         window.location.href = "my-diagrams.html";
       } else {
-        showMessage("Hatalı kullanıcı adı veya şifre!", "red");
+        showMessage("Incorrect username or password!", "red");
       }
     });
 
@@ -145,14 +145,14 @@
 
       const exists = savedUsers.some(u => u.username === username);
       if (exists) {
-        showMessage("Bu kullanıcı adı zaten kayıtlı.", "red");
+        showMessage("This username is already registered.", "red");
         return;
       }
 
       const newUser = { username, password };
       savedUsers.push(newUser);
       localStorage.setItem('users', JSON.stringify(savedUsers));
-      showMessage("Kayıt başarılı! Giriş yapabilirsiniz.", "green");
+      showMessage("Registration successful! You can log in.", "green");
 
       document.getElementById("signupForm").reset();
     });
