@@ -403,15 +403,15 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     };
 
-    window.closePreview = function() {
+    window.closePreview = function () {
         document.getElementById('pdfPreviewModal').style.display = 'none';
-    
+
         // 👇 BURASI: Kapattığında tekrar geri getiriyorsun
         const hiddenElements = document.querySelectorAll('.no-print');
         hiddenElements.forEach(el => el.style.display = '');
     }
-    
-    
+
+
 
     // Add event listeners to initial rows
     document.querySelectorAll('#processTableBody tr').forEach(row => {
