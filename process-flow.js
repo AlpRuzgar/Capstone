@@ -367,8 +367,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        const element = document.getElementById("pdfbody"); // PDF yapmak istediğin alanın id’si
-
+        const element = document.getElementById("pdfbody"); 
         const hiddenElements = document.querySelectorAll('.no-print');
         hiddenElements.forEach(el => el.style.display = 'none');
 
@@ -381,12 +380,12 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById("downloadPdf").onclick = function () {
                 const opt = {
                     scale: 0.1,
-                    margin: 0.5, // inç cinsinden boşluk
+                    margin: 0.5, 
                     filename: 'process-flow.pdf',
                     image: { type: 'jpeg', quality: 1 },
                     html2canvas: {
                         transform: 5,
-                        scale: 3,           // çözünürlüğü artırır, kalite artar ama dosya büyür
+                        scale: 3,           
                         useCORS: true
                     },
                     jsPDF: {
@@ -406,7 +405,6 @@ document.addEventListener('DOMContentLoaded', function () {
     window.closePreview = function () {
         document.getElementById('pdfPreviewModal').style.display = 'none';
 
-        // 👇 BURASI: Kapattığında tekrar geri getiriyorsun
         const hiddenElements = document.querySelectorAll('.no-print');
         hiddenElements.forEach(el => el.style.display = '');
     }
