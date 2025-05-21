@@ -353,7 +353,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         const element = document.getElementById("pdfbody"); 
-
         const hiddenElements = document.querySelectorAll('.no-print');
         hiddenElements.forEach(el => el.style.display = 'none');
 

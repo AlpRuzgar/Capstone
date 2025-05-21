@@ -46,64 +46,64 @@
 
     <script>
         document.getElementById('newDiagramBtn').onclick = () => {
-    window.location.href = 'process-flow-diagram-improved.html';
-};
-
-function loadDiagrams() {
-    const listContainer = document.getElementById('diagramList');
-    listContainer.innerHTML = '';
-
-    const currentUser = JSON.parse(localStorage.getItem('loggedInUser'));
-    if (!currentUser) {
-        window.location.href = "login.html";
-        return;
-    }
-
-    const keys = Object.keys(localStorage).filter(k => k.startsWith('diagram_'));
-    const userDiagrams = keys.map(k => {
-        const data = JSON.parse(localStorage.getItem(k));
-        return { key: k, data };
-    }).filter(d => d.data.owner === currentUser.username); // sadece kendi diyagramları
-
-    if (userDiagrams.length === 0) {
-        listContainer.innerHTML = '<p>No saved diagrams found.</p>';
-        return;
-    }
-
-    userDiagrams.forEach(({ key, data }) => {
-        const entry = document.createElement('div');
-        entry.className = 'diagram-entry';
-
-        const title = document.createElement('h3');
-        title.textContent = data.title || key;
-
-        const actions = document.createElement('div');
-        actions.className = 'diagram-actions';
-
-        const openBtn = document.createElement('button');
-        openBtn.textContent = 'Open';
-        openBtn.onclick = () => {
-            window.location.href = `process-flow-diagram-improved.html?diagram=${encodeURIComponent(key)}`;
+            window.location.href = 'process-flow-diagram-improved.html';
         };
 
-        const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = 'Delete';
-        deleteBtn.onclick = () => {
-            if (confirm('Are you sure you want to delete this diagram?')) {
-                localStorage.removeItem(key);
-                loadDiagrams();
+        function loadDiagrams() {
+            const listContainer = document.getElementById('diagramList');
+            listContainer.innerHTML = '';
+
+            const currentUser = JSON.parse(localStorage.getItem('loggedInUser'));
+            if (!currentUser) {
+                window.location.href = "login.html";
+                return;
             }
-        };
 
-        actions.appendChild(openBtn);
-        actions.appendChild(deleteBtn);
-        entry.appendChild(title);
-        entry.appendChild(actions);
-        listContainer.appendChild(entry);
-    });
-}
+            const keys = Object.keys(localStorage).filter(k => k.startsWith('diagram_'));
+            const userDiagrams = keys.map(k => {
+                const data = JSON.parse(localStorage.getItem(k));
+                return { key: k, data };
+            }).filter(d => d.data.owner === currentUser.username); // sadece kendi diyagramları
 
-loadDiagrams();
+            if (userDiagrams.length === 0) {
+                listContainer.innerHTML = '<p>No saved diagrams found.</p>';
+                return;
+            }
+
+            userDiagrams.forEach(({ key, data }) => {
+                const entry = document.createElement('div');
+                entry.className = 'diagram-entry';
+
+                const title = document.createElement('h3');
+                title.textContent = data.title || key;
+
+                const actions = document.createElement('div');
+                actions.className = 'diagram-actions';
+
+                const openBtn = document.createElement('button');
+                openBtn.textContent = 'Open';
+                openBtn.onclick = () => {
+                    window.location.href = `process-flow-diagram-improved.html?diagram=${encodeURIComponent(key)}`;
+                };
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.onclick = () => {
+                    if (confirm('Are you sure you want to delete this diagram?')) {
+                        localStorage.removeItem(key);
+                        loadDiagrams();
+                    }
+                };
+
+                actions.appendChild(openBtn);
+                actions.appendChild(deleteBtn);
+                entry.appendChild(title);
+                entry.appendChild(actions);
+                listContainer.appendChild(entry);
+            });
+        }
+
+        loadDiagrams();
 
     </script>
 </body>

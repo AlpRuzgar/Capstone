@@ -75,7 +75,7 @@ body {
     color: green;
 }
 
-.update-button{
+.update-button {
     background-color: green;
     opacity: 100%;
     color: white;
@@ -87,9 +87,9 @@ body {
     font-size: medium;
 }
 
-.update-button:hover{
+.update-button:hover {
     background-color: darkgreen;
-    
+
 }
 
 .body-container {
