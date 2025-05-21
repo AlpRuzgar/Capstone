@@ -148,21 +148,6 @@ document.addEventListener('DOMContentLoaded', function () {
         window.location.href = "my-diagrams.html";
     });
 
-    /* Date formatting
-    document.getElementById('date').addEventListener('input', function (e) {
-        let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
-
-        if (value.length > 0) {
-            // Format as MM/DD/YYYY
-            if (value.length <= 2) {
-                e.target.value = value;
-            } else if (value.length <= 4) {
-                e.target.value = value.slice(0, 2) + ' / ' + value.slice(2);
-            } else {
-                e.target.value = value.slice(0, 2) + ' / ' + value.slice(2, 4) + ' / ' + value.slice(4, 8);
-            }
-        }
-    });*/
 
     // Add row event listener
     document.getElementById('addRow').addEventListener('click', function () {
@@ -192,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to add event listeners to a row
     function addRowListeners(row) {
-        // Input change events
+        
         const inputs = row.querySelectorAll('input');
         inputs.forEach(input => {
             input.addEventListener('change', function () {
@@ -214,16 +199,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const symbolCells = row.querySelectorAll('.symbol-cell');
         symbolCells.forEach(cell => {
             cell.addEventListener('click', function () {
-                // Remove selection from all symbols in this row
+                
                 symbolCells.forEach(c => c.classList.remove('symbol-selected'));
 
-                // Add selection to clicked symbol
+                
                 this.classList.add('symbol-selected');
 
-                // Update counts
+                
                 updateCounts();
 
-                // Save state after selecting symbol
+                
                 saveState();
             });
         });
@@ -253,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('storeCount').textContent = storeCount;
     }
 
-    // Function to update metrics
+    // Update fonksyionları
     function updateMetrics() {
         let totalDistance = 0;
         let totalTime = 0;
@@ -268,7 +253,7 @@ document.addEventListener('DOMContentLoaded', function () {
             totalDistance += distance;
             totalTime += time;
 
-            // Assume operations and inspections add value, others don't
+            
             if (row.querySelector('.operation.symbol-selected') ||
                 row.querySelector('.inspection.symbol-selected')) {
                 valueAddedTime += time;
@@ -288,13 +273,13 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('nonValueAddedPercentage').textContent = nonValueAddedPercentage + '%';
     }
 
-    // Update metrics button
+    // Update Buton
     document.getElementById('update').addEventListener('click', function () {
         updateMetrics();
         saveState();
     });
 
-    // Reset functionality
+    // Reset Buton
     document.getElementById('reset').addEventListener('click', function () {
         if (confirm('Are you sure you want to reset all data?')) {
             // Clear the table except for first row
@@ -367,7 +352,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        const element = document.getElementById("pdfbody"); // PDF yapmak istediğin alanın id’si
+        const element = document.getElementById("pdfbody"); 
 
         const hiddenElements = document.querySelectorAll('.no-print');
         hiddenElements.forEach(el => el.style.display = 'none');
@@ -381,12 +366,12 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById("downloadPdf").onclick = function () {
                 const opt = {
                     scale: 0.1,
-                    margin: 0.5, // inç cinsinden boşluk
+                    margin: 0.5, 
                     filename: 'process-flow.pdf',
                     image: { type: 'jpeg', quality: 1 },
                     html2canvas: {
                         transform: 5,
-                        scale: 3,           // çözünürlüğü artırır, kalite artar ama dosya büyür
+                        scale: 3,           
                         useCORS: true
                     },
                     jsPDF: {
@@ -397,21 +382,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 };
 
 
-                html2pdf().set(opt).from(element).save();
-                document.getElementById('pdfPreviewModal').style.display = 'none';
+                html2pdf().set(opt).from(element).save().then(() => {
+                    document.getElementById('pdfPreviewModal').style.display = 'none';
+                    hiddenElements.forEach(el => el.style.display = '');
+                });
             };
         });
     };
 
-    window.closePreview = function() {
+    window.closePreview = function () {
         document.getElementById('pdfPreviewModal').style.display = 'none';
-    
-        // 👇 BURASI: Kapattığında tekrar geri getiriyorsun
+
         const hiddenElements = document.querySelectorAll('.no-print');
         hiddenElements.forEach(el => el.style.display = '');
     }
-    
-    
+
+
 
     // Add event listeners to initial rows
     document.querySelectorAll('#processTableBody tr').forEach(row => {
@@ -436,7 +422,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const state = getCurrentState();
             state.title = title;
-            state.owner = currentUser.username; // kullanıcı kimliği
+            state.owner = currentUser.username; 
             const key = 'diagram_' + Date.now();
             localStorage.setItem(key, JSON.stringify(state));
             alert('Diagram saved!');
